@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
-
-import matplotlib
-import matplotlib.pyplot as plt
-from matplotlib.collections import PatchCollection
-import matplotlib.patches as patches
 import numpy as np
 import random
 import copy
+import sys
+import time
 
 class Creature:
   
@@ -85,10 +81,13 @@ class Environment:
 
 
   def run_simulation(self, epochs=10,print_=False):
+    print("Initial Seed")
+    self.print_board()
     for epoch in range(epochs):
+      time.sleep(0.1)
       self.next_generation()
       if print_:
-        print("Epoch: {}".format(epoch))
+        print("Epoch: {}".format(epoch+1))
         self.print_board()
 
 
@@ -97,86 +96,48 @@ class Environment:
       print(str(row))
     print()
 
-# seed = [(2,1),(2,2),(2,3),(3,1),(3,2),(3,3)]
-seed = [(2,2),(3,3),(4,1),(4,2),(4,3)]
 
-board_size = 20
+# Glider
+seed_glider = [(2,2),(3,3),(4,1),(4,2),(4,3)]
+
+# Penta-decathlon
+seed_penta_decathlon = [(8,15),
+(9,15),
+(10,14),(10,15),(10,16),
+(13,14),(13,15),(13,16),
+(14,15),
+(15,15),
+(16,15),
+(17,15),
+(18,14),(18,15),(18,16),
+(21,14),(21,15),(21,16),
+(22,15),
+(23,15)
+]
+
+# Methuselah: R-pentomino
+seed_r_pentomino = [(15,15),(15,16),
+(16,14),(16,15),
+(17,15)]
+
+
+# Seed choice:
+seed = None
+seed_choice = int(sys.argv[1])
+if seed_choice == 1:
+  seed = seed_penta_decathlon
+elif seed_choice == 2:
+  seed = seed_r_pentomino
+else:
+  seed = seed_glider
+  
+# CLI - number of epochs to run for.
+epochs = int(sys.argv[2])
+
+board_size = 30
 env = Environment(board_size,board_size,seed)
 
-print("Starting Board")
-env.print_board()
 
-epochs = 10
+# epochs = 10
 print("Epochs Evolved: {}".format(epochs))
 env.run_simulation(epochs,True)
-
-# board_size = 20
-# env = Environment(board_size,board_size)
-
-# creature = env.board[2][2]
-# creature.alive = True
-
-# creature1 = env.board[1][1]
-# # creature1.alive = True
-# creature2 = env.board[1][2]
-# # creature2.alive = True
-# creature3 = env.board[1][3]
-# # creature3.alive = True
-
-# creature4 = env.board[2][1]
-# creature4.alive = True
-# # creature5 = env.board[1][2]
-# # creature5.alive = True
-# creature6 = env.board[2][3]
-# creature6.alive = True
-
-# creature7 = env.board[3][1]
-# # creature7.alive = True
-# creature8 = env.board[3][2]
-# # creature8.alive = True
-# creature9 = env.board[3][3]
-# # creature9.alive = True
-
-# print("Starting Board")
-# env.print_board()
-
-# epochs = 3
-# print("Epochs Evolved: {}".format(epochs))
-# env.run_simulation(epochs)
-# env.print_board()
-
-#######################################################
-
-# def draw_creature(x,y, colour="black"):
-#   return patches.Rectangle((x,y),1,1,color=colour)
-
-# fig = plt.figure()
-# ax = fig.add_subplot(1, 1, 1)
-
-# # Major ticks every 20, minor ticks every 5
-# major_ticks = np.arange(0, 101, 20)
-# minor_ticks = np.arange(0, 101, 5)
-
-# ax.set_xticks(major_ticks)
-# ax.set_xticks(minor_ticks, minor=True)
-# ax.set_yticks(major_ticks)
-# ax.set_yticks(minor_ticks, minor=True)
-
-# # And a corresponding grid
-# ax.grid(which='both')
-
-# # Or if you want different settings for the grids:
-# ax.grid(which='minor', alpha=0.8)
-# ax.grid(which='major', alpha=1)
-
-# fig = matplotlib.pyplot.gcf()
-# fig.set_size_inches(15, 15)
-
-# rect2 = draw_creature(10,10,"red")
-# ax.add_patch(rect2)
-
-# for x in range(0,100,1):
-#   rect = draw_creature(x,x)
-#   ax.add_patch(rect)
-
-# plt.show()
