@@ -19,6 +19,7 @@ There are five command line arguments:
 * "--cmap" STR -> Set the matplotlib colour map for prettier visuals.
   * https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
   * Hopefully in future there will be more rules which create objects of varying colour rather than 0 and 255.
+* "--initial_pop" FLOAT -> Set proportion of creatures to initialize as alive. E.g. --initial_pop 0.4 means roughly 2/5 of the creatures will start alive (3/5s are dead).
   
 Gray Cmap            |  Ocean Camp
 :-------------------------:|:-------------------------:
