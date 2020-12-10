@@ -1,8 +1,11 @@
 import numpy as np
 import random
 import copy
-import sys
+import sys, argparse
 import time
+import matplotlib.pyplot as plt 
+import matplotlib.animation as animation
+from seeds import seed_collection
 
 class Creature:
   
@@ -36,13 +39,20 @@ class Environment:
     self.next_board = None
     
   def __fill_board(self):
-    for row_index in range(len(self.board)):
-      for column_index in range(len(self.board[0])):
+    for row_index in range(self.x_bounds):
+      for column_index in range(self.y_bounds):
         self.board[row_index][column_index] = Creature(row_index, column_index)
 
   def __seed(self, seed):
-    for (x,y) in seed:
-      self.board[x][y].alive = True
+    if seed:
+      for (x,y) in seed:
+        self.board[x][y].alive = True
+    else:
+      for row_index in range(self.x_bounds):
+        for column_index in range(self.y_bounds):
+          rand = random.uniform(0,1)
+          if rand > 0.8:
+            self.board[row_index][column_index].alive = True
 
   
   def get_neighbours(self, creature):
@@ -97,47 +107,76 @@ class Environment:
     print()
 
 
-# Glider
-seed_glider = [(2,2),(3,3),(4,1),(4,2),(4,3)]
+def initial(environment):
+  copied = np.zeros((environment.x_bounds, environment.y_bounds),dtype=float)
+  for row_index in range(environment.x_bounds):
+    for col_index in range(environment.y_bounds):
+      creature = environment.board[row_index][col_index]
+      if creature.alive:
+        copied[row_index][col_index] = 255
+      else:
+        copied[row_index][col_index] = 0
+  return copied
 
-# Penta-decathlon
-seed_penta_decathlon = [(8,15),
-(9,15),
-(10,14),(10,15),(10,16),
-(13,14),(13,15),(13,16),
-(14,15),
-(15,15),
-(16,15),
-(17,15),
-(18,14),(18,15),(18,16),
-(21,14),(21,15),(21,16),
-(22,15),
-(23,15)
-]
-
-# Methuselah: R-pentomino
-seed_r_pentomino = [(15,15),(15,16),
-(16,14),(16,15),
-(17,15)]
+def update(frameNum, img, environment):
+  environment.next_generation()
+  copied = np.zeros((environment.x_bounds, environment.y_bounds),dtype=float)
+  for row_index in range(environment.x_bounds):
+    for col_index in range(environment.y_bounds):
+      creature = environment.board[row_index][col_index]
+      if creature.alive:
+        copied[row_index][col_index] = 255
+      else:
+        copied[row_index][col_index] = 0
+  img.set_data(copied)
+  return img,
 
 
-# Seed choice:
-seed = None
-seed_choice = int(sys.argv[1])
-if seed_choice == 1:
-  seed = seed_penta_decathlon
-elif seed_choice == 2:
-  seed = seed_r_pentomino
-else:
-  seed = seed_glider
+def main():
+  parser = argparse.ArgumentParser(description="Conway Game of Life Simulation")
+  # add args
+  parser.add_argument("--grid_size", dest="grid_size", required=False)
+  parser.add_argument("--seed", dest="seed", required=False)
+  parser.add_argument("--interval", dest="interval", required=False)
+  parser.add_argument("--save_file", dest="save_file", required=False)
+  args = parser.parse_args()
   
-# CLI - number of epochs to run for.
-epochs = int(sys.argv[2])
+  grid_size = 40
+  if args.grid_size:
+    grid_size = int(args.grid_size)
 
-board_size = 30
-env = Environment(board_size,board_size,seed)
+  seed = -1
+  if args.seed:
+    seed = int(args.seed)
+  if seed not in seed_collection.keys():
+    seed = -1
+  seed_name = seed_collection[seed][0]
+  seed = seed_collection[seed][1]
+
+  env = Environment(grid_size,grid_size,seed)
+
+  interval = 10
+  if args.interval:
+    interval = int(args.interval)
+
+  # Initial 2d array.
+  grid = initial(env)
+  # set up animation
+  fig, ax = plt.subplots(num=seed_name)
+  img = ax.imshow(grid, interpolation='nearest',cmap="gray")
+  ani = animation.FuncAnimation(fig, update, fargs=(img, env, ),
+                                frames = 60,
+                                interval=interval,
+                                save_count=50)
+  
+  plt.axis("off")
+
+  if args.save_file:
+    file_name = args.save_file + ".gif"
+    ani.save(file_name, fps=10)
+
+  plt.show()
 
 
-# epochs = 10
-print("Epochs Evolved: {}".format(epochs))
-env.run_simulation(epochs,True)
+if __name__ == "__main__":
+  main()
