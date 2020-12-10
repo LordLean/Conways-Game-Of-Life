@@ -11,7 +11,7 @@ Example:
 ![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/random_one.gif)
 ![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/fun_one.gif)
 
-There are five command line arguments:
+There are six command line arguments:
 * "--grid_size" INT -> This corresponds to the x by y square board that the game of life takes place on.
 * "--seed" INT -> A numerical value to determine which seed to initialize GOL with. Default is -1 which corresponds to random spawn. Approx 0.2 of all creatures will start alive.
 * "--interval" INT -> Delay between output frames in milliseconds.
