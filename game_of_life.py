@@ -19,9 +19,7 @@ class Creature:
     self.alive = False
     self.neighbours = 0
 
-  def draw_creature(self, x, y, colour):
-    NotImplemented
-
+  # For initial text based GOL.
   def __repr__(self):
     if self.alive:
       return "X"
@@ -39,11 +37,17 @@ class Environment:
     self.next_board = None
     
   def __fill_board(self):
+    """
+    Fill "board" with creatures.
+    """
     for row_index in range(self.x_bounds):
       for column_index in range(self.y_bounds):
         self.board[row_index][column_index] = Creature(row_index, column_index)
 
   def __seed(self, seed):
+    """
+    Set seed of initial alive creatures.
+    """
     if seed:
       for (x,y) in seed:
         self.board[x][y].alive = True
@@ -56,6 +60,9 @@ class Environment:
 
   
   def get_neighbours(self, creature):
+    """
+    Get count of all neighbours for a given (dead or alive) creature.
+    """
     neighbour_count = 0
     x, y = creature.x_pos, creature.y_pos
     for row_slice in [x-1, x, x+1]:
@@ -69,6 +76,9 @@ class Environment:
 
 
   def survived(self, creature):
+    """
+    Return boolean determining whether a creature would survive or come alive in the generation.
+    """
     survive = False
     neighbour_count = self.get_neighbours(creature)
     if creature.alive and neighbour_count in [2,3]:
@@ -79,6 +89,9 @@ class Environment:
 
 
   def next_generation(self):
+    """
+    Create the next generation, creatures' lives subject to Conway's rules.
+    """
     self.next_board = copy.deepcopy(self.board)
     for row in self.board:
       for creature in row:
@@ -91,6 +104,9 @@ class Environment:
 
 
   def run_simulation(self, epochs=10,print_=False):
+    """
+    Text based output. 
+    """
     print("Initial Seed")
     self.print_board()
     for epoch in range(epochs):
@@ -107,6 +123,10 @@ class Environment:
     print()
 
 
+"""
+Matplotlib animation library works best with non-object types. Convert Creatures to 255(on) or 0(off).
+Creatures remain as objects incase this project later pursues alternative routes.
+"""
 def initial(environment):
   copied = np.zeros((environment.x_bounds, environment.y_bounds),dtype=float)
   for row_index in range(environment.x_bounds):
@@ -117,7 +137,6 @@ def initial(environment):
       else:
         copied[row_index][col_index] = 0
   return copied
-
 def update(frameNum, img, environment):
   environment.next_generation()
   copied = np.zeros((environment.x_bounds, environment.y_bounds),dtype=float)
@@ -133,18 +152,22 @@ def update(frameNum, img, environment):
 
 
 def main():
+  # Get CLI args.
   parser = argparse.ArgumentParser(description="Conway Game of Life Simulation")
-  # add args
+  # add args.
   parser.add_argument("--grid_size", dest="grid_size", required=False)
   parser.add_argument("--seed", dest="seed", required=False)
   parser.add_argument("--interval", dest="interval", required=False)
   parser.add_argument("--save_file", dest="save_file", required=False)
+  parser.add_argument("--cmap", dest="cmap", required=False)
   args = parser.parse_args()
   
+  # Set grid/board size for environment.
   grid_size = 40
   if args.grid_size:
     grid_size = int(args.grid_size)
 
+  # Set seed - imported froms seeds.py.
   seed = -1
   if args.seed:
     seed = int(args.seed)
@@ -153,17 +176,22 @@ def main():
   seed_name = seed_collection[seed][0]
   seed = seed_collection[seed][1]
 
+  # Create GOL environment.
   env = Environment(grid_size,grid_size,seed)
 
   interval = 10
   if args.interval:
     interval = int(args.interval)
 
+  cmap = "gray"
+  if args.cmap:
+    cmap = args.cmap
+
   # Initial 2d array.
   grid = initial(env)
   # set up animation
   fig, ax = plt.subplots(num=seed_name)
-  img = ax.imshow(grid, interpolation='nearest',cmap="gray")
+  img = ax.imshow(grid, interpolation='nearest',cmap=cmap)
   ani = animation.FuncAnimation(fig, update, fargs=(img, env, ),
                                 frames = 60,
                                 interval=interval,
@@ -171,6 +199,7 @@ def main():
   
   plt.axis("off")
 
+  # If save, the CLI - "args.save_file" str will be the output .gif's name.
   if args.save_file:
     file_name = args.save_file + ".gif"
     ani.save(file_name, fps=10)
