@@ -1,6 +1,6 @@
 # Conways-Game-Of-Life
 
-## WARNING - Game of Life simulation below is shown by black and white .gifs. Contrasting dark and light spaces may be unsuitable for epileptics.
+## WARNING - Game of Life simulation below is shown by black and white .gifs. Contrasting dark and light spaces may be unsuitable for some.
 
 Python implementation of Conway's game of life. 0-player game where evolution is determined by the population's seed. Animation is handled using Matplotlib.animation.FuncAnimation().
 
