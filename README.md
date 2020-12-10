@@ -5,7 +5,7 @@ Seeds are held in "seeds.py" in dictionary form: seed_collection -> {\<key value
 
 Example: 
 
-![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/random1.png)
+![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/random_one.gif)
 ![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/fun1.png)
 
 There are five command line arguments:
