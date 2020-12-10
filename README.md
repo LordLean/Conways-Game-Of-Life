@@ -6,7 +6,7 @@ Seeds are held in "seeds.py" in dictionary form: seed_collection -> {\<key value
 Example: 
 
 ![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/random_one.gif)
-![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/fun1.png)
+![](https://raw.githubusercontent.com/LordLean/Conways-Game-Of-Life/main/Images/fun_one.gif)
 
 There are five command line arguments:
 * "--grid_size" -> This corresponds to the x by y square board that the game of life takes place on.
