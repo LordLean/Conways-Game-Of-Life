@@ -179,7 +179,7 @@ def main():
   # Create GOL environment.
   env = Environment(grid_size,grid_size,seed)
 
-  interval = 10
+  interval = 50
   if args.interval:
     interval = int(args.interval)
 
