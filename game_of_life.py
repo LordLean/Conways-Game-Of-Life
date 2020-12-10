@@ -193,9 +193,9 @@ def main():
   fig, ax = plt.subplots(num=seed_name)
   img = ax.imshow(grid, interpolation='nearest',cmap=cmap)
   ani = animation.FuncAnimation(fig, update, fargs=(img, env, ),
-                                frames = 60,
+                                frames = 100,
                                 interval=interval,
-                                save_count=50)
+                                save_count=sys.maxsize)
   
   plt.axis("off")
 
