@@ -28,10 +28,11 @@ class Creature:
 
 class Environment:
 
-  def __init__(self, x_range, y_range, seed):
+  def __init__(self, x_range, y_range, seed, initial_pop=0.2):
     self.x_bounds = x_range
     self.y_bounds = y_range
     self.board = np.zeros((x_range, y_range),dtype=object)
+    self.initial_pop = initial_pop
     self.__fill_board()
     self.__seed(seed)
     self.next_board = None
@@ -55,7 +56,7 @@ class Environment:
       for row_index in range(self.x_bounds):
         for column_index in range(self.y_bounds):
           rand = random.uniform(0,1)
-          if rand > 0.8:
+          if rand > (1-self.initial_pop):
             self.board[row_index][column_index].alive = True
 
   
@@ -160,6 +161,7 @@ def main():
   parser.add_argument("--interval", dest="interval", required=False)
   parser.add_argument("--save_file", dest="save_file", required=False)
   parser.add_argument("--cmap", dest="cmap", required=False)
+  parser.add_argument("--initial_pop", dest="initial_pop", required=False)
   args = parser.parse_args()
   
   # Set grid/board size for environment.
@@ -176,8 +178,12 @@ def main():
   seed_name = seed_collection[seed][0]
   seed = seed_collection[seed][1]
 
+  initial_pop = 0.2
+  if args.initial_pop:
+    initial_pop = float(args.initial_pop)
+
   # Create GOL environment.
-  env = Environment(grid_size,grid_size,seed)
+  env = Environment(grid_size,grid_size,seed, initial_pop)
 
   interval = 100
   if args.interval:
