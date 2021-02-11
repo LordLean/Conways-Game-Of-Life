@@ -2,7 +2,12 @@
 
 ## WARNING - Game of Life simulation below is shown with black and white .gifs. Contrasting dark and light spaces may be unsuitable for some.
 
-Python implementation of Conway's game of life. 0-player game where evolution is determined by the population's seed. Animation is handled using Matplotlib.animation.FuncAnimation().
+Python implementation of Conway's game of life. 0-player game where evolution is determined by the population's seed. Animation is handled using Matplotlib.animation.FuncAnimation class.
+
+Conway's rules of life are generally condensed into the following:
+* Any living cell with either 2 or 3 live neighbours survives into the next generation.
+* Any dead cell with 3 live neighbours will become a live cell in the next generation.
+* All other living cells die in the next generation, whilst all dead cells remain dead.
 
 Seeds are held in "seeds.py" inside dictionary: seed_collection -> {\<key value\>: [\<seed name\>, <seed's list of tuples>]}. Add new seeds above the collection and save reference in the seed_collection dictionary with new key and seed name (this is used for the output's title). 
 
